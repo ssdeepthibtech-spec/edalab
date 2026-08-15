@@ -1,0 +1,23 @@
+Program 1: Down-Sampling (Daily to Monthly)
+import pandas as pd
+df = pd.read_csv("hospital.csv")
+df["AdmissionDate"] = pd.date_range(start="2024-01-01", periods=len(df), freq="D")
+df["AdmissionDate"] = pd.to_datetime(df["AdmissionDate"], format="%Y-%m-%d")
+df.set_index("AdmissionDate", inplace=True)
+monthly_data = df.resample("ME").sum(numeric_only=True)
+print("Monthly Summary (Down-Sampled):")
+print(monthly_data)
+daily_data = monthly_data.resample("D").ffill()
+print("\nDaily Summary (Up-Sampled):")
+print(daily_data)
+
+Program 2: Up-Sampling (Monthly to Daily)
+import pandas as pd
+df = pd.read_csv("hospital.csv")
+df["AdmissionDate"] = pd.date_range(start="2024-01-01", periods=len(df), freq="D")
+df["AdmissionDate"] = pd.to_datetime(df["AdmissionDate"], format="%Y-%m-%d")
+df.set_index("AdmissionDate", inplace=True)
+monthly_data = df.resample("ME").mean(numeric_only=True)
+daily_data = monthly_data.resample("D").ffill()
+print("Up-Sampled Daily Data")
+print(daily_data.head(15))
